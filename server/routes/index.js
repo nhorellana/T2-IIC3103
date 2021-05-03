@@ -50,11 +50,17 @@ router.post("/artists/:id/albums", async (req, res, next) => {
     res.json(new_album);
   } catch (err) {
     if (err.code == "ER_DUP_ENTRY") {
+      let new_album = await db.one_album(
+        Buffer.from(`${req.body.name}:${req.params.id}`).toString("base64")
+      );
       res.status(409);
       res.json(new_album);
-    } else if ((err.code = "ER_BAD_NULL_ERROR")) {
+    } else if (err.code == "ER_BAD_NULL_ERROR") {
       const msg = "input inválido";
       res.status(400).send(msg);
+    } else if (err == "ER_NO_REFERENCED_ROW_2") {
+      const msg = "artista no existe";
+      res.status(422).send(msg);
     }
   }
 });

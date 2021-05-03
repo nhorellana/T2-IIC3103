@@ -121,6 +121,7 @@ t2_db.create_album = (id, name, genre, artist_id) => {
         `${api_host}/albums/${id}/`,
       ],
       (err, results) => {
+        console.log("testeo: e, nro" + err);
         if (err) {
           return reject(err);
         }
