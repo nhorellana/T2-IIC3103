@@ -9,7 +9,6 @@ const api_host = "https://t2-iic3103-api.herokuapp.com/";
 /* POST */
 
 router.post("/artists", async (req, res, next) => {
-  console.log("Log Data: = " + JSON.stringify(req.body));
   try {
     let results = await db.create_artist(
       Buffer.from(`${req.body.name}`).toString("base64"),
@@ -37,7 +36,6 @@ router.post("/artists", async (req, res, next) => {
 });
 
 router.post("/artists/:id/albums", async (req, res, next) => {
-  console.log("Log Data: = " + JSON.stringify(req.body));
   try {
     let results = await db.create_album(
       Buffer.from(`${req.body.name}:${req.params.id}`).toString("base64"),
@@ -48,6 +46,7 @@ router.post("/artists/:id/albums", async (req, res, next) => {
     let new_album = await db.one_album(
       Buffer.from(`${req.body.name}:${req.params.id}`).toString("base64")
     );
+    res.status(201);
     res.json(new_album);
   } catch (err) {
     if (err.code == "ER_DUP_ENTRY") {
