@@ -58,7 +58,7 @@ router.post("/artists/:id/albums", async (req, res, next) => {
     } else if (err.code == "ER_BAD_NULL_ERROR") {
       const msg = "input inválido";
       res.status(400).send(msg);
-    } else if (err == "ER_NO_REFERENCED_ROW_2") {
+    } else if (err.code == "ER_NO_REFERENCED_ROW_2") {
       const msg = "artista no existe";
       res.status(422).send(msg);
     }
