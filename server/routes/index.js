@@ -47,8 +47,13 @@ router.post("/artists/:id/albums", async (req, res, next) => {
     );
     res.json(new_album);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if (err.code == "ER_DUP_ENTRY") {
+      const msg = "álbum ya creado";
+      res.status(409).send(msg);
+    } else if ((err.code = "ER_BAD_NULL_ERROR")) {
+      const msg = "input inválido";
+      res.status(400).send(msg);
+    }
   }
 });
 
