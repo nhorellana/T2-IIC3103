@@ -57,6 +57,10 @@ t2_db.all_artists = () => {
 t2_db.one_artist = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM artist WHERE id = ?`, [id], (err, results) => {
+      if (!Object.keys(results).length) {
+        console.log("testeooo");
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }
@@ -71,6 +75,9 @@ t2_db.one_artist_albums = (id) => {
       `SELECT * FROM album WHERE artist_id = ?`,
       [id],
       (err, results) => {
+        if (!Object.keys(results).length) {
+          return reject(404);
+        }
         if (err) {
           return reject(err);
         }
@@ -85,6 +92,9 @@ t2_db.one_artist_albums = (id) => {
 t2_db.delete_artist = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM artist WHERE id = ?`, [id], (err, results) => {
+      if (!results.affectedRows) {
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }

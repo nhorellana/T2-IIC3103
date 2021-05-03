@@ -74,8 +74,9 @@ router.get("/artists/:id", async (req, res, next) => {
     let results = await db.one_artist(req.params.id);
     res.json(results);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("artista no encontrado");
+    }
   }
 });
 
@@ -84,8 +85,9 @@ router.get("/artists/:id/albums", async (req, res, next) => {
     let results = await db.one_artist_albums(req.params.id);
     res.json(results);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("album no encontrado");
+    }
   }
 });
 
@@ -94,10 +96,11 @@ router.get("/artists/:id/albums", async (req, res, next) => {
 router.delete("/artists/:id", async (req, res, next) => {
   try {
     let results = await db.delete_artist(req.params.id);
-    res.json(results);
+    res.status(204).send("artista eliminado");
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("artista no encontrado");
+    }
   }
 });
 
