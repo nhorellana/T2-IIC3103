@@ -86,7 +86,7 @@ router.get("/artists/:id/albums", async (req, res, next) => {
     res.json(results);
   } catch (err) {
     if ((err = 404)) {
-      res.status(404).send("album no encontrado");
+      res.status(404).send("artista no encontrado");
     }
   }
 });
@@ -99,7 +99,7 @@ router.delete("/artists/:id", async (req, res, next) => {
     res.status(204).send("artista eliminado");
   } catch (err) {
     if ((err = 404)) {
-      res.status(404).send("artista no encontrado");
+      res.status(404).send("artista inexistente");
     }
   }
 });
@@ -146,8 +146,9 @@ router.get("/albums/:id", async (req, res, next) => {
     let results = await db.one_album(req.params.id);
     res.json(results);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("álbum no encontrado");
+    }
   }
 });
 
@@ -156,8 +157,9 @@ router.get("/albums/:id/tracks", async (req, res, next) => {
     let results = await db.one_album_tracks(req.params.id);
     res.json(results);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("álbum no encontrado");
+    }
   }
 });
 
@@ -166,10 +168,11 @@ router.get("/albums/:id/tracks", async (req, res, next) => {
 router.delete("/albums/:id", async (req, res, next) => {
   try {
     let results = await db.delete_album(req.params.id);
-    res.json(results);
+    res.status(204).send("álbum eliminado");
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("álbum no encontrado");
+    }
   }
 });
 
@@ -192,8 +195,9 @@ router.get("/tracks/:id", async (req, res, next) => {
     let results = await db.one_track(req.params.id);
     res.json(results);
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("canción no encontrado");
+    }
   }
 });
 
@@ -202,10 +206,11 @@ router.get("/tracks/:id", async (req, res, next) => {
 router.put("/tracks/:id/play", async (req, res, next) => {
   try {
     let results = await db.play_tracks(req.params.id);
-    res.json(results);
+    res.status(200).send("canción reproducida");
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("canción inexistente");
+    }
   }
 });
 
@@ -214,10 +219,11 @@ router.put("/tracks/:id/play", async (req, res, next) => {
 router.delete("/tracks/:id", async (req, res, next) => {
   try {
     let results = await db.delete_track(req.params.id);
-    res.json(results);
+    res.status(204).send("canción eliminada");
   } catch (err) {
-    console.log("Error: " + err);
-    res.sendStatus(500);
+    if ((err = 404)) {
+      res.status(404).send("canción inexistente");
+    }
   }
 });
 

@@ -147,6 +147,10 @@ t2_db.all_albums = () => {
 t2_db.one_album = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM album WHERE id = ?`, [id], (err, results) => {
+      if (!Object.keys(results).length) {
+        console.log("testeooo");
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }
@@ -161,6 +165,10 @@ t2_db.one_album_tracks = (id) => {
       `SELECT * FROM track WHERE album_id = ?`,
       [id],
       (err, results) => {
+        if (!Object.keys(results).length) {
+          console.log("testeooo");
+          return reject(404);
+        }
         if (err) {
           return reject(err);
         }
@@ -175,6 +183,9 @@ t2_db.one_album_tracks = (id) => {
 t2_db.delete_album = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM album WHERE id = ?`, [id], (err, results) => {
+      if (!results.affectedRows) {
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }
@@ -219,6 +230,10 @@ t2_db.all_tracks = () => {
 t2_db.one_track = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM track WHERE id = ?`, [id], (err, results) => {
+      if (!Object.keys(results).length) {
+        console.log("testeooo");
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }
@@ -235,6 +250,9 @@ t2_db.play_tracks = (id) => {
       `UPDATE track SET times_played = times_played + 1 WHERE (id = ?)`,
       [id],
       (err, results) => {
+        if (!results.affectedRows) {
+          return reject(404);
+        }
         if (err) {
           return reject(err);
         }
@@ -249,6 +267,9 @@ t2_db.play_tracks = (id) => {
 t2_db.delete_track = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM track WHERE id = ?`, [id], (err, results) => {
+      if (!results.affectedRows) {
+        return reject(404);
+      }
       if (err) {
         return reject(err);
       }
