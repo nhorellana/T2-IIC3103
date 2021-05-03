@@ -1,5 +1,7 @@
 const mysql = require("mysql");
 
+const api_host = "https://t2-iic3103-api.herokuapp.com";
+
 const pool = mysql.createPool({
   connectionLimit: 10,
   password: "1edb771f",
@@ -19,8 +21,15 @@ t2_db.create_artist = (id, name, age) => {
   console.log("Data: " + id, name, age);
   return new Promise((resolve, reject) => {
     pool.query(
-      "INSERT INTO artist (id, name, age) VALUES (?, ?, ?)",
-      [id, name, age],
+      "INSERT INTO artist (id, name, age, albums, tracks, self) VALUES (?, ?, ?, ?, ?, ?)",
+      [
+        id,
+        name,
+        age,
+        `${api_host}/artists/${id}/albums`,
+        `${api_host}/artists/${id}/tracks`,
+        `${api_host}/artists/${id}`,
+      ],
       (err, results) => {
         if (err) {
           return reject(err);
@@ -88,11 +97,19 @@ t2_db.delete_artist = (id) => {
 
 /* POST */
 
-t2_db.create_album = (id, name, genre, artist, artist_id) => {
+t2_db.create_album = (id, name, genre, artist_id) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "INSERT INTO album (id, name, genre, artist, artist_id) VALUES (?, ?, ?, ?, ?)",
-      [id, name, genre, artist, artist_id],
+      "INSERT INTO album (id, name, genre, artist_id, artist, tracks, self) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [
+        id,
+        name,
+        genre,
+        artist_id,
+        `${api_host}/artists/${artist_id}`,
+        `${api_host}/albums/${id}/tracks`,
+        `${api_host}/albums/${id}/`,
+      ],
       (err, results) => {
         if (err) {
           return reject(err);
