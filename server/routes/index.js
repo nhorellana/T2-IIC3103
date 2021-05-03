@@ -19,13 +19,16 @@ router.post("/artists", async (req, res, next) => {
     let new_artist = await db.one_artist(
       Buffer.from(`${req.body.name}`).toString("base64")
     );
-    console.log("Data: " + req.body.name + req.body.age);
     res.status(201);
     res.json(new_artist);
   } catch (err) {
     if (err.code == "ER_DUP_ENTRY") {
+      let new_artist = await db.one_artist(
+        Buffer.from(`${req.body.name}`).toString("base64")
+      );
       const msg = "artista ya existe";
-      res.status(409).send(msg);
+      res.status(409);
+      res.json(new_artist);
     } else if ((err.code = "ER_BAD_NULL_ERROR")) {
       const msg = "input inválido";
       res.status(400).send(msg);
@@ -48,8 +51,8 @@ router.post("/artists/:id/albums", async (req, res, next) => {
     res.json(new_album);
   } catch (err) {
     if (err.code == "ER_DUP_ENTRY") {
-      const msg = "álbum ya creado";
-      res.status(409).send(msg);
+      res.status(409);
+      res.json(new_album);
     } else if ((err.code = "ER_BAD_NULL_ERROR")) {
       const msg = "input inválido";
       res.status(400).send(msg);
